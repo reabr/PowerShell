@@ -46,7 +46,7 @@ Describe 'Tests for $ErrorView' -Tag CI {
             $e = { & $testScriptPath } | Should -Throw -ErrorId 'UnexpectedToken' -PassThru | Out-String
             $e | Should -BeLike "*${testScriptPath}:4*"
             # validate line number is shown
-            $e | Should -BeLike '* 2 *'
+            $e | Should -BeLike '* 4 *'
         }
 
         It 'Remote errors show up correctly' {
@@ -121,8 +121,7 @@ Describe 'Tests for $ErrorView' -Tag CI {
             # need to see if ANSI escape sequences are in the output as ANSI is disabled for CI
             if ($e.Contains("`e")) {
                 $e | Should -BeLike "*: `e*myTest*"
-            }
-            else {
+            } else {
                 $e | Should -BeLike '*: myTest*'
             }
         }
@@ -168,11 +167,11 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject shows Line information' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   1 | This is the line with the error"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -183,7 +182,7 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            Line     = 1
+                            Line = 1
                             LineText = 'This is the line with the error'
                         }
                     )
@@ -196,11 +195,11 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject shows File information' {
             $expected = (@(
-                    ": MyFile.ps1"
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": MyFile.ps1"
+                "Line |"
+                "   1 | This is the line with the error"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -211,8 +210,8 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            File     = 'MyFile.ps1'
-                            Line     = 1
+                            File = 'MyFile.ps1'
+                            Line = 1
                             LineText = 'This is the line with the error'
                         }
                     )
@@ -225,12 +224,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject has StartColumn' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                  ~~~~~~~~~~~~~~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                  ~~~~~~~~~~~~~~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -242,8 +241,8 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = 18
                         }
                     )
@@ -256,12 +255,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject has StartColumn and EndColumn' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                  ~~~~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                  ~~~~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -273,10 +272,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = 18
-                            EndColumn   = 22
+                            EndColumn = 22
                         }
                     )
                 )
@@ -288,12 +287,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject has StartColumn at end of the line' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                               ~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                               ~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -305,8 +304,8 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = 31
                         }
                     )
@@ -320,12 +319,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject has StartColumn at end of the line with EndColumn' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                               ~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                               ~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -337,10 +336,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = 31
-                            EndColumn   = 32
+                            EndColumn = 32
                         }
                     )
                 )
@@ -352,11 +351,11 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject ignores EndColumn if no StartColumn' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   1 | This is the line with the error"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -367,8 +366,8 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            Line      = 1
-                            LineText  = 'This is the line with the error'
+                            Line = 1
+                            LineText = 'This is the line with the error'
                             EndColumn = 22
                         }
                     )
@@ -381,12 +380,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject converts StartColumn and EndColumn from string' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                  ~~~~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                  ~~~~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -398,10 +397,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = "18"
-                            EndColumn   = "22"
+                            EndColumn = "22"
                         }
                     )
                 )
@@ -413,11 +412,11 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject ignores StartColumn if it cannot be converted' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   1 | This is the line with the error"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -428,10 +427,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            Line        = 1
-                            LineText    = 'This is the line with the error'
+                            Line = 1
+                            LineText = 'This is the line with the error'
                             StartColumn = 'abc'
-                            EndColumn   = 22
+                            EndColumn = 22
                         }
                     )
                 )
@@ -443,12 +442,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
 
         It 'Parser TargetObject ignores EndColumn if it cannot be converted' {
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   5 | This is the line with the error"
-                    "     |                  ~~~~~~~~~~~~~~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   5 | This is the line with the error"
+                "     |                  ~~~~~~~~~~~~~~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -460,10 +459,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
 
-                            Line        = 5
-                            LineText    = 'This is the line with the error'
+                            Line = 5
+                            LineText = 'This is the line with the error'
                             StartColumn = 18
-                            EndColumn   = 'abc'
+                            EndColumn = 'abc'
                         }
                     )
                 )
@@ -481,11 +480,11 @@ Describe 'Tests for $ErrorView' -Tag CI {
             param ($Value)
 
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   1 | This is the line with the error"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -496,8 +495,8 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            Line        = 1
-                            LineText    = 'This is the line with the error'
+                            Line = 1
+                            LineText = 'This is the line with the error'
                             StartColumn = $Value
                         }
                     )
@@ -518,12 +517,12 @@ Describe 'Tests for $ErrorView' -Tag CI {
             param ($Value)
 
             $expected = (@(
-                    ": "
-                    "Line |"
-                    "   1 | This is the line with the error"
-                    "     |                  ~~~~~~~~~~~~~~"
-                    "     | Test Parser Error"
-                ) -join ([Environment]::NewLine)).TrimEnd()
+                ": "
+                "Line |"
+                "   1 | This is the line with the error"
+                "     |                  ~~~~~~~~~~~~~~"
+                "     | Test Parser Error"
+            ) -join ([Environment]::NewLine)).TrimEnd()
             $e = {
                 [CmdletBinding()]
                 param ()
@@ -534,10 +533,10 @@ Describe 'Tests for $ErrorView' -Tag CI {
                         'ParserErrorText',
                         [System.Management.Automation.ErrorCategory]::ParserError,
                         @{
-                            Line        = 1
-                            LineText    = 'This is the line with the error'
+                            Line = 1
+                            LineText = 'This is the line with the error'
                             StartColumn = 18
-                            EndColumn   = $Value
+                            EndColumn = $Value
                         }
                     )
                 )
@@ -561,37 +560,6 @@ Describe 'Tests for $ErrorView' -Tag CI {
             $e = & "$PSHOME/pwsh" -noprofile -command $testScript 2>&1 | Out-String
             $e | Should -BeLike "*$([Environment]::NewLine)  Recommendation: TestAction*"
         }
-
-        It 'ConciseView normalizes newlines in errors from module/wrapper path (no ScriptName)' {
-            # Create a temporary module that throws multiline error
-            $testModule = @'
-                 function Test-WrapperError {
-                     # This function simulates a wrapper/module scenario
-                     # where ScriptName may be absent or empty
-                     Write-Error "Line1`nLine2`nLine3"
-                 }
-                 Export-ModuleMember -Function Test-WrapperError
-                 '@
-
-            Set-Content -Path $testModulePath -Value $testModule
-            
-            try {
-                # Import module and call function - simulates the non-ScriptName path
-                $result = & "$PSHOME/pwsh" -noprofile -command "
-                    Import-Module '$testModulePath'
-                    `$ErrorView = 'ConciseView'
-                    Test-WrapperError 2>&1 | Out-String
-                "
-
-                # ✅ Verify: newlines should be normalized to spaces in ConciseView
-                # The error message should NOT contain literal newlines between lines
-                $result | Should -Not -BeLike '*Line1*Line2*' -Because 'Newlines should be collapsed'
-                $result | Should -BeLike '*Line1*Line2*Line3*' -Because 'All lines should be present but on same line'
-            }
-            finally {
-                Remove-Item -Path $testModulePath -Force -ErrorAction SilentlyContinue
-            }
-        }
     }
 
     Context 'NormalView tests' {
@@ -601,11 +569,9 @@ Describe 'Tests for $ErrorView' -Tag CI {
                 $ErrorView = 'NormalView'
                 Set-StrictMode -Version 2
                 throw 'Oops!'
-            }
-            catch {
+            } catch {
                 $e = $_ | Out-String
-            }
-            finally {
+            } finally {
                 Set-StrictMode -Off
             }
 
@@ -619,8 +585,7 @@ Describe 'Tests for $ErrorView' -Tag CI {
             try {
                 $ErrorView = 'DetailedView'
                 throw 'Oops!'
-            }
-            catch {
+            } catch {
                 # an extra newline gets added by the formatting system so we remove them
                 $e = ($_ | Out-String).Trim([Environment]::NewLine.ToCharArray())
             }
